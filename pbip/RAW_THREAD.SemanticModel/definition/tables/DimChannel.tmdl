@@ -1,0 +1,53 @@
+table DimChannel
+	lineageTag: a6412376-33f8-462c-8986-5703e7c2356d
+
+	column ChannelKey
+		dataType: int64
+		formatString: 0
+		lineageTag: a6693d66-010c-4267-b64a-b137df129b34
+		summarizeBy: none
+		sourceColumn: ChannelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Channel
+		dataType: string
+		lineageTag: 261c91e2-92d5-47bf-9d85-268dbd205960
+		summarizeBy: none
+		sourceColumn: Channel
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChannelGroup
+		dataType: string
+		lineageTag: 1ac38e40-c108-46f4-97d2-b992a3c3633d
+		summarizeBy: none
+		sourceColumn: ChannelGroup
+
+		annotation SummarizationSetBy = Automatic
+
+	column CommissionPct
+		dataType: double
+		lineageTag: 555013be-a765-460a-af56-5c370efe221c
+		summarizeBy: sum
+		sourceColumn: CommissionPct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition DimChannel = m
+		mode: import
+		source =
+				let
+				  Источник = Csv.Document(File.Contents("C:\Users\admin\Downloads\New\DimChannel.csv"), [Delimiter = ",", Columns = 4, QuoteStyle = QuoteStyle.None]),
+				  #"Повышенные заголовки" = Table.PromoteHeaders(Источник, [PromoteAllScalars = true]),
+				  #"Измененный тип столбца" = Table.TransformColumnTypes(#"Повышенные заголовки", {{"ChannelKey", Int64.Type}, {"Channel", type text}, {"ChannelGroup", type text}, {"CommissionPct", type text}}, "ru"),
+				    #"Измененный тип с языком" = Table.TransformColumnTypes(#"Измененный тип столбца", {{"CommissionPct", type number}}, "en-GB")
+				in
+				  #"Измененный тип с языком"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Навигация
+

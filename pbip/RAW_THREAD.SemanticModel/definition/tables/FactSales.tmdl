@@ -1,0 +1,159 @@
+table FactSales
+	lineageTag: 18952ea9-bd8e-4363-9ee8-4fa1b58ed4e3
+
+	column SalesLineKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 08820ba4-a209-4843-a03d-3e4afdd1a0b1
+		summarizeBy: count
+		sourceColumn: SalesLineKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column OrderID
+		dataType: string
+		lineageTag: 21c472ad-f35d-4910-ba6c-9b8e07da323a
+		summarizeBy: none
+		sourceColumn: OrderID
+
+		annotation SummarizationSetBy = Automatic
+
+	column DateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: cca9eda5-4f4e-4b20-9c06-41853363905b
+		summarizeBy: none
+		sourceColumn: DateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 254aedca-b45a-4a59-892f-000ff21c0496
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		lineageTag: ed8a1f3b-f453-4434-ad52-b81b7c7b00fa
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChannelKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 125613dd-9d84-4833-b3bb-27fd2fbfedee
+		summarizeBy: none
+		sourceColumn: ChannelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column GeographyKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 8230da3d-965f-4164-a24c-0caad597dc13
+		summarizeBy: none
+		sourceColumn: GeographyKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Quantity
+		dataType: int64
+		formatString: 0
+		lineageTag: 112b01db-181f-4404-a323-df8fd81a354c
+		summarizeBy: sum
+		sourceColumn: Quantity
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitPrice
+		dataType: double
+		lineageTag: b460c81a-01ff-44a2-ac2e-30ced813b0ec
+		summarizeBy: sum
+		sourceColumn: UnitPrice
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DiscountPct
+		dataType: double
+		lineageTag: 33b1ff83-10cd-446f-bdaa-cbd507d6b11b
+		summarizeBy: sum
+		sourceColumn: DiscountPct
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Revenue
+		dataType: double
+		lineageTag: 8a00bfaf-9697-494b-9ae8-4f1748e121a9
+		summarizeBy: sum
+		sourceColumn: Revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Cost
+		dataType: double
+		lineageTag: b6841756-f91c-42cb-83e7-8e9ed2cefc3b
+		summarizeBy: sum
+		sourceColumn: Cost
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ReturnedQty
+		dataType: int64
+		formatString: 0
+		lineageTag: 16008e6a-ce25-43ca-bddd-3e71d229ed0a
+		summarizeBy: sum
+		sourceColumn: ReturnedQty
+
+		annotation SummarizationSetBy = Automatic
+
+	column ReturnedAmount
+		dataType: double
+		lineageTag: 4e5ef322-0848-4984-8438-5baa8c722a87
+		summarizeBy: sum
+		sourceColumn: ReturnedAmount
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Months Since Acquisition' = DATEDIFF ( RELATED ( DimCustomer[AcquisitionDate] ), RELATED ( DimDate[Date] ), MONTH )
+		formatString: 0
+		lineageTag: 58d08512-8f95-4dd5-9c43-1f641d6b11a8
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactSales = m
+		mode: import
+		source =
+				let
+				  Источник = Csv.Document(File.Contents("C:\Users\admin\Downloads\New\FactSales.csv"), [Delimiter = ",", Columns = 14, QuoteStyle = QuoteStyle.None]),
+				  #"Повышенные заголовки" = Table.PromoteHeaders(Источник, [PromoteAllScalars = true]),
+				  #"Измененный тип столбца" = Table.TransformColumnTypes(#"Повышенные заголовки", {{"SalesLineKey", Int64.Type}, {"OrderID", type text}, {"DateKey", Int64.Type}, {"ProductKey", Int64.Type}, {"CustomerKey", Int64.Type}, {"ChannelKey", Int64.Type}, {"GeographyKey", Int64.Type}, {"Quantity", Int64.Type}, {"UnitPrice", type text}, {"DiscountPct", type text}, {"Revenue", type text}, {"Cost", type text}, {"ReturnedQty", Int64.Type}, {"ReturnedAmount", type text}}, "ru"),
+				    #"Измененный тип с языком" = Table.TransformColumnTypes(#"Измененный тип столбца", {{"Revenue", type number}}, "en-GB"),
+				    #"Измененный тип с языком1" = Table.TransformColumnTypes(#"Измененный тип с языком", {{"UnitPrice", type number}}, "en-GB"),
+				    #"Измененный тип с языком2" = Table.TransformColumnTypes(#"Измененный тип с языком1", {{"DiscountPct", type number}}, "en-GB"),
+				    #"Измененный тип с языком3" = Table.TransformColumnTypes(#"Измененный тип с языком2", {{"Cost", type number}}, "en-GB"),
+				    #"Измененный тип с языком4" = Table.TransformColumnTypes(#"Измененный тип с языком3", {{"ReturnedAmount", type number}}, "en-GB")
+				in
+				  #"Измененный тип с языком4"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Навигация
+

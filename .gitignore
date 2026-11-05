@@ -1,0 +1,5 @@
+.DS_Store
+*.pbix
+*.xlsx
+**/.pbi/localSettings.json
+**/.pbi/cache.abf

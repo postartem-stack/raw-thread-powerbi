@@ -1,0 +1,31 @@
+model Model
+	culture: ru-RU
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: ru-RU
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_QueryOrder = ["DimChannel","DimCustomer","DimDate","DimGeography","DimProduct","FactInventory","FactMarketingSpend","FactSales","FactTargets"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table DimChannel
+ref table DimCustomer
+ref table DateTableTemplate_dce4687c-9b97-4548-9dfc-a7f64493185f
+ref table LocalDateTable_7b8c0f73-fb12-4ecb-9695-5363084ae30e
+ref table DimDate
+ref table DimGeography
+ref table DimProduct
+ref table LocalDateTable_fa1d7580-2443-46bb-9d63-db3fdeafadf4
+ref table FactInventory
+ref table FactMarketingSpend
+ref table FactSales
+ref table FactTargets
+ref table LocalDateTable_310fd6ec-2adc-4257-b371-4db7528a5dd3
+ref table _Measures
+
+ref cultureInfo ru-RU
+

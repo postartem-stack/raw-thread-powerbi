@@ -1,0 +1,80 @@
+table FactTargets
+	lineageTag: 72795380-73e5-4bff-948e-a142da781841
+
+	column YearMonth
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: a6d14a6e-c389-4764-9689-38393388aba2
+		summarizeBy: none
+		sourceColumn: YearMonth
+
+		variation Изменение
+			isDefault
+			relationship: b5a576b9-50d5-4cf8-826e-c1ba15fd23e6
+			defaultHierarchy: LocalDateTable_310fd6ec-2adc-4257-b371-4db7528a5dd3.'Иерархия дат'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Category
+		dataType: string
+		lineageTag: 3ed8a595-b652-4a98-984a-b5f766c8f13d
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column ChannelKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 5e037f53-1518-420d-b893-e67366d6400e
+		summarizeBy: count
+		sourceColumn: ChannelKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column TargetRevenue
+		dataType: double
+		lineageTag: 2f9dea6f-5593-4c40-8b57-cc2d3b9a8662
+		summarizeBy: sum
+		sourceColumn: TargetRevenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TargetMargin
+		dataType: double
+		lineageTag: 28613547-9f64-472c-a1d2-7ccf5ad97fdf
+		summarizeBy: sum
+		sourceColumn: TargetMargin
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MonthEndDateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: b4f94f37-ec8c-4635-bfd7-1ae8efb6d48e
+		summarizeBy: count
+		sourceColumn: MonthEndDateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	partition FactTargets = m
+		mode: import
+		source =
+				let
+				  Источник = Csv.Document(File.Contents("C:\Users\admin\Downloads\New\FactTargets.csv"), [Delimiter = ",", Columns = 6, QuoteStyle = QuoteStyle.None]),
+				  #"Повышенные заголовки" = Table.PromoteHeaders(Источник, [PromoteAllScalars = true]),
+				  #"Измененный тип столбца" = Table.TransformColumnTypes(#"Повышенные заголовки", {{"YearMonth", type date}, {"Category", type text}, {"ChannelKey", Int64.Type}, {"TargetRevenue", type text}, {"TargetMargin", type text}, {"MonthEndDateKey", Int64.Type}}, "ru"),
+				    #"Измененный тип с языком" = Table.TransformColumnTypes(#"Измененный тип столбца", {{"TargetRevenue", type number}, {"TargetMargin", type number}}, "en-GB")
+				in
+				  #"Измененный тип с языком"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Навигация
+

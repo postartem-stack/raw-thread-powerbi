@@ -1,0 +1,106 @@
+table DimProduct
+	lineageTag: 39e7d338-65a5-4c30-bbc9-1aff74f60a36
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 60b210cc-2a52-4c81-94d8-23bb98afbd33
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column Category
+		dataType: string
+		lineageTag: 9e92e374-12da-4067-b70d-afc9b5e5d535
+		summarizeBy: none
+		sourceColumn: Category
+
+		annotation SummarizationSetBy = Automatic
+
+	column Subcategory
+		dataType: string
+		lineageTag: b4361b03-fe94-4087-a076-25b0d92618a2
+		summarizeBy: none
+		sourceColumn: Subcategory
+
+		annotation SummarizationSetBy = Automatic
+
+	column Product
+		dataType: string
+		lineageTag: a65e87d3-1c39-474c-9a1a-c4a951178e50
+		summarizeBy: none
+		sourceColumn: Product
+
+		annotation SummarizationSetBy = Automatic
+
+	column ListPrice
+		dataType: int64
+		formatString: 0
+		lineageTag: 75f302f2-8218-4a23-b003-e92fc22c37e2
+		summarizeBy: sum
+		sourceColumn: ListPrice
+
+		annotation SummarizationSetBy = Automatic
+
+	column StandardCost
+		dataType: int64
+		formatString: 0
+		lineageTag: e6bafee8-1357-4d33-95fe-bcdd3879f2ca
+		summarizeBy: sum
+		sourceColumn: StandardCost
+
+		annotation SummarizationSetBy = Automatic
+
+	column Collection
+		dataType: string
+		lineageTag: 907c73eb-8a5b-4798-9e19-da65d20cadb2
+		summarizeBy: none
+		sourceColumn: Collection
+
+		annotation SummarizationSetBy = Automatic
+
+	column SKU
+		dataType: string
+		lineageTag: 58f9452c-e0cc-402c-bceb-81b83efe8896
+		summarizeBy: none
+		sourceColumn: SKU
+
+		annotation SummarizationSetBy = Automatic
+
+	column GrossMarginPct
+		dataType: string
+		lineageTag: ed9a59ab-f641-4b77-96c0-36fc684e48af
+		summarizeBy: none
+		sourceColumn: GrossMarginPct
+
+		annotation SummarizationSetBy = Automatic
+
+	column LaunchDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: c396aa54-7771-4296-8ced-5fd1d2f5f79f
+		summarizeBy: none
+		sourceColumn: LaunchDate
+
+		variation Изменение
+			isDefault
+			relationship: 0e9713e3-26e8-4ed3-a23c-f978d917af55
+			defaultHierarchy: LocalDateTable_fa1d7580-2443-46bb-9d63-db3fdeafadf4.'Иерархия дат'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition DimProduct = m
+		mode: import
+		source =
+				let
+				  Источник = Csv.Document(File.Contents("C:\Users\admin\Downloads\New\DimProduct.csv"), [Delimiter = ",", Columns = 10, QuoteStyle = QuoteStyle.None]),
+				  #"Повышенные заголовки" = Table.PromoteHeaders(Источник, [PromoteAllScalars = true]),
+				  #"Измененный тип столбца" = Table.TransformColumnTypes(#"Повышенные заголовки", {{"ProductKey", Int64.Type}, {"Category", type text}, {"Subcategory", type text}, {"Product", type text}, {"ListPrice", Int64.Type}, {"StandardCost", Int64.Type}, {"Collection", type text}, {"SKU", type text}, {"GrossMarginPct", type text}, {"LaunchDate", type date}}, "ru")
+				in
+				  #"Измененный тип столбца"
+
+	annotation PBI_ResultType = Table
+

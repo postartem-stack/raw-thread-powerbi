@@ -1,0 +1,56 @@
+relationship 922554e4-91cb-4115-8d97-3f45ec133237
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimCustomer.AcquisitionYearMonth
+	toColumn: LocalDateTable_7b8c0f73-fb12-4ecb-9695-5363084ae30e.Date
+
+relationship 0e9713e3-26e8-4ed3-a23c-f978d917af55
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DimProduct.LaunchDate
+	toColumn: LocalDateTable_fa1d7580-2443-46bb-9d63-db3fdeafadf4.Date
+
+relationship b5a576b9-50d5-4cf8-826e-c1ba15fd23e6
+	joinOnDateBehavior: datePartOnly
+	fromColumn: FactTargets.YearMonth
+	toColumn: LocalDateTable_310fd6ec-2adc-4257-b371-4db7528a5dd3.Date
+
+relationship 231d225e-fefb-5af8-69d7-a0c317240d7d
+	fromColumn: FactSales.DateKey
+	toColumn: DimDate.DateKey
+
+relationship b4773eea-08d0-563b-f3e7-27f90ef7d4d5
+	fromColumn: FactSales.ProductKey
+	toColumn: DimProduct.ProductKey
+
+relationship 93650784-03b1-cc18-6183-63e0038a2612
+	fromColumn: FactSales.CustomerKey
+	toColumn: DimCustomer.CustomerKey
+
+relationship bd0be857-e8ff-5b66-cf99-68b2f3d3f883
+	fromColumn: FactSales.ChannelKey
+	toColumn: DimChannel.ChannelKey
+
+relationship e0e9c479-e668-a2bb-08e0-7a0981249ba3
+	fromColumn: FactSales.GeographyKey
+	toColumn: DimGeography.GeographyKey
+
+relationship 9c1ca8cd-831f-5235-a5e8-975640924e1d
+	fromColumn: FactInventory.DateKey
+	toColumn: DimDate.DateKey
+
+relationship 6bae222f-5700-2ba2-f71b-3aa262a821ee
+	fromColumn: FactInventory.ProductKey
+	toColumn: DimProduct.ProductKey
+
+relationship 18358b8d-7596-80f8-18f0-e283be536baf
+	fromColumn: FactMarketingSpend.DateKey
+	toColumn: DimDate.DateKey
+
+relationship cff761ab-2292-99c0-3b8e-79e96fe7cd8c
+	fromColumn: FactMarketingSpend.ChannelKey
+	toColumn: DimChannel.ChannelKey
+
+relationship 1cf737c8-d337-7cbc-eb76-9e71ac37c537
+	isActive: false
+	fromColumn: DimCustomer.AcquisitionDate
+	toColumn: DimDate.Date
+

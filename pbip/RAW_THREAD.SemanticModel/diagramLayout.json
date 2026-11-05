@@ -1,0 +1,151 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 1309.505084745763,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 62
+          },
+          "nodeIndex": "DimChannel",
+          "nodeLineageTag": "a6412376-33f8-462c-8986-5703e7c2356d",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 262
+          },
+          "nodeIndex": "DimCustomer",
+          "nodeLineageTag": "52428e78-d86f-4cdd-9d32-1b3accd8040b",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 298,
+            "y": 0
+          },
+          "nodeIndex": "DimDate",
+          "nodeLineageTag": "22ab089a-4f63-44d0-8a13-d85003ffaafb",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 9
+        },
+        {
+          "location": {
+            "x": 1128.5217342376709,
+            "y": 296
+          },
+          "nodeIndex": "DimGeography",
+          "nodeLineageTag": "e8fb9d59-70b6-4b1a-a4bd-918a8a039278",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 8
+        },
+        {
+          "location": {
+            "x": 576,
+            "y": 0
+          },
+          "nodeIndex": "DimProduct",
+          "nodeLineageTag": "39e7d338-65a5-4c30-bbc9-1aff74f60a36",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 859,
+            "y": 124
+          },
+          "nodeIndex": "FactInventory",
+          "nodeLineageTag": "d9fd40c1-f2db-45c9-9081-dd1b15753fa4",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 847,
+            "y": 381
+          },
+          "nodeIndex": "FactMarketingSpend",
+          "nodeLineageTag": "8781d3c8-1b94-4aa6-973b-6349f72da9be",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 516,
+            "y": 332
+          },
+          "nodeIndex": "FactSales",
+          "nodeLineageTag": "18952ea9-bd8e-4363-9ee8-4fa1b58ed4e3",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 1175.5652084350586,
+            "y": 35
+          },
+          "nodeIndex": "FactTargets",
+          "nodeLineageTag": "72795380-73e5-4bff-948e-a142da781841",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 1459.5652084350586,
+            "y": 216
+          },
+          "nodeIndex": "_Measures",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "Все таблицы",
+      "zoomValue": 76.822916666666657,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "Все таблицы",
+  "defaultDiagram": "Все таблицы"
+}

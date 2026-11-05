@@ -1,0 +1,84 @@
+table DimCustomer
+	lineageTag: 52428e78-d86f-4cdd-9d32-1b3accd8040b
+
+	column CustomerKey
+		dataType: int64
+		formatString: 0
+		lineageTag: fecab31f-e616-43ac-a543-e85788c796f0
+		summarizeBy: none
+		sourceColumn: CustomerKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column CustomerID
+		dataType: string
+		lineageTag: 9983dc5c-d51d-48ff-b537-6f49ab3604ee
+		summarizeBy: none
+		sourceColumn: CustomerID
+
+		annotation SummarizationSetBy = Automatic
+
+	column Segment
+		dataType: string
+		lineageTag: 9e2b51a4-8440-4d31-9555-6af32ddd9370
+		summarizeBy: none
+		sourceColumn: Segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column AcquisitionDate
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: af112961-db75-466d-a03e-0cb171f20c06
+		summarizeBy: none
+		sourceColumn: AcquisitionDate
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column AcquisitionChannel
+		dataType: string
+		lineageTag: d0018352-4244-4fb7-8986-5be267c70625
+		summarizeBy: none
+		sourceColumn: AcquisitionChannel
+
+		annotation SummarizationSetBy = Automatic
+
+	column GeographyKey
+		dataType: int64
+		formatString: 0
+		lineageTag: be9b48bd-dc46-43b4-8a3d-2f39a0af9592
+		summarizeBy: count
+		sourceColumn: GeographyKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column AcquisitionYearMonth
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0afdb94e-5ecb-4bb1-8490-022637385548
+		summarizeBy: none
+		sourceColumn: AcquisitionYearMonth
+
+		variation Изменение
+			isDefault
+			relationship: 922554e4-91cb-4115-8d97-3f45ec133237
+			defaultHierarchy: LocalDateTable_7b8c0f73-fb12-4ecb-9695-5363084ae30e.'Иерархия дат'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition DimCustomer = m
+		mode: import
+		source =
+				let
+				  Источник = Csv.Document(File.Contents("C:\Users\admin\Downloads\New\DimCustomer.csv"), [Delimiter = ",", Columns = 7, QuoteStyle = QuoteStyle.None]),
+				  #"Повышенные заголовки" = Table.PromoteHeaders(Источник, [PromoteAllScalars = true]),
+				  #"Измененный тип столбца" = Table.TransformColumnTypes(#"Повышенные заголовки", {{"CustomerKey", Int64.Type}, {"CustomerID", type text}, {"Segment", type text}, {"AcquisitionDate", type date}, {"AcquisitionChannel", type text}, {"GeographyKey", Int64.Type}, {"AcquisitionYearMonth", type date}}, "ru")
+				in
+				  #"Измененный тип столбца"
+
+	annotation PBI_ResultType = Table
+

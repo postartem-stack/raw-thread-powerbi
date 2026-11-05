@@ -1,0 +1,202 @@
+table _Measures
+	isHidden
+	lineageTag: 65be24f7-788d-4a40-95a9-cd6bc05fb4db
+
+	measure 'Total Revenue' = SUM ( FactSales[Revenue] )
+		formatString: 0.00
+		lineageTag: 616f21ea-5d12-4b9d-bb44-1b838f764fb6
+
+	measure Returns = SUM ( FactSales[ReturnedAmount] )
+		formatString: 0.00
+		lineageTag: 20dc6393-1385-453c-80d7-775a18cd482c
+
+	measure 'Total Cost' = SUM ( FactSales[Cost] )
+		formatString: 0.00
+		lineageTag: 03e838bf-0cbb-4000-bf0c-3d095387ed94
+
+	measure 'Net Revenue' = [Total Revenue] - [Returns]
+		formatString: 0.00
+		lineageTag: 0a35fd90-abe7-48cc-a24c-c21ab6b435a2
+
+	measure 'Gross Profit' = [Net Revenue] - [Total Cost]
+		formatString: 0
+		lineageTag: 5627afc8-122e-4cc3-82b8-2f3576fc46a5
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure 'Margin %' = DIVIDE ( [Gross Profit], [Net Revenue] )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6ea403ef-3298-4e9c-9b6b-a5fc1b73a6f6
+
+	measure Orders = DISTINCTCOUNT ( FactSales[OrderID] )
+		formatString: #,0
+		lineageTag: 3ca3defe-3e72-43b5-9fc0-7112df78d4fc
+
+	measure 'Units Sold' = SUM ( FactSales[Quantity] )
+		formatString: #,0
+		lineageTag: 0a14bafb-3691-4d9f-8cf8-8855b703224f
+
+	measure AOV = DIVIDE ( [Net Revenue], [Orders] )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 89ab0d2b-2f1e-480d-a218-11cb1f88d4a4
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Revenue LY' = CALCULATE ( [Net Revenue], SAMEPERIODLASTYEAR ( DimDate[Date] ) )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 53febf02-c09c-4d7a-a9da-d06f35721344
+
+	measure 'Revenue YoY' = [Net Revenue] - [Revenue LY]
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 2bc27d9d-af96-4da0-a74c-8070b9b8485d
+
+	measure 'Revenue YoY %' = DIVIDE ( [Revenue YoY], [Revenue LY] )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4e3e54d4-fa2e-43a8-b79c-bf9ee57e196f
+
+	measure 'Revenue YTD' = TOTALYTD ( [Net Revenue], DimDate[Date] )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 4ac35495-0de5-40bb-b2dd-98878608de58
+
+	measure 'Revenue MAT' = CALCULATE ( [Net Revenue], DATESINPERIOD ( DimDate[Date], MAX ( DimDate[Date] ), -12, MONTH ) )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: d1cc4684-7abd-4930-be11-0f4b93979034
+
+	measure 'Target Revenue' = CALCULATE ( SUM ( FactTargets[TargetRevenue] ), TREATAS ( VALUES ( DimDate[YearMonth] ), FactTargets[YearMonth] ), TREATAS ( VALUES ( DimProduct[Category] ), FactTargets[Category] ), TREATAS ( VALUES ( DimChannel[ChannelKey] ), FactTargets[ChannelKey] ) )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: e0bfd9be-fc0e-4eaf-86d1-15b385c8ff97
+
+	measure 'Revenue vs Target' = [Net Revenue] - [Target Revenue]
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 51d431c8-0915-4bb6-a41d-7bd968fd4f1c
+
+	measure 'Target Attainment %' = DIVIDE ( [Net Revenue], [Target Revenue] )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 69f3e863-1daa-403c-9cdb-cf65653f7483
+
+	measure 'Active Customers' = DISTINCTCOUNT ( FactSales[CustomerKey] )
+		formatString: #,0
+		lineageTag: 80dfee2b-b1f4-46a8-b82d-1a3caf5b0582
+
+	measure 'New Customers' = CALCULATE ( DISTINCTCOUNT ( DimCustomer[CustomerKey] ), USERELATIONSHIP ( DimCustomer[AcquisitionDate], DimDate[Date] ) )
+		formatString: #,0
+		lineageTag: 2da017ab-642d-4e31-a26c-ddda83682b19
+
+	measure 'Returning Customers' = VAR _start = MIN ( DimDate[Date] ) RETURN COALESCE ( CALCULATE ( DISTINCTCOUNT ( FactSales[CustomerKey] ), FILTER ( ALL ( DimCustomer[AcquisitionDate] ), DimCustomer[AcquisitionDate] < _start ) ), 0 )
+		formatString: #,0
+		lineageTag: 926d35b6-7701-4030-b27f-f1a74a06f91f
+
+	measure 'Revenue per Customer' = DIVIDE ( [Net Revenue], [Active Customers] )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 8bca10bd-46ad-4aba-bfd1-7cc7f0a42a85
+
+	measure 'Orders per Customer' = DIVIDE ( [Orders], [Active Customers] )
+		lineageTag: 4af7ad11-b71a-4305-87b4-adf0008453f3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Customer LTV' = DIVIDE ( [Gross Profit], [Active Customers] )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 920dc10f-2571-4376-bda0-1f50b2d1001d
+
+	measure 'Cohort Size' = CALCULATE ( DISTINCTCOUNT ( DimCustomer[CustomerKey] ), ALLEXCEPT ( DimCustomer, DimCustomer[AcquisitionYearMonth] ) )
+		formatString: 0
+		lineageTag: 10bf489f-ec6b-4b01-b741-9a9797b5e390
+
+	measure 'Retention %' = DIVIDE ( [Active Customers], [Cohort Size] )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: f38677f3-3c94-4664-85b3-f389452f5008
+
+	measure 'Product Rank' = RANKX ( ALLSELECTED ( DimProduct[Product] ), [Net Revenue], , DESC, DENSE )
+		formatString: 0
+		lineageTag: 16c4e6a6-41d4-4c6a-a3e8-f50c83b90059
+
+	measure 'Revenue Cumulative %' = VAR CurrentRev = [Net Revenue] VAR AllProducts = ADDCOLUMNS ( ALLSELECTED ( DimProduct[Product] ), "@rev", [Net Revenue] ) VAR TotalRev = SUMX ( AllProducts, [@rev] ) VAR CumRev = SUMX ( FILTER ( AllProducts, [@rev] >= CurrentRev ), [@rev] ) RETURN DIVIDE ( CumRev, TotalRev )
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 1e8c1066-30eb-42bc-9a80-609e52d7264c
+
+	measure 'ABC Class' = VAR c = [Revenue Cumulative %] RETURN SWITCH ( TRUE (), c <= 0.8, "A", c <= 0.95, "B", "C" )
+		lineageTag: 657fd747-0861-4cba-8faa-9c5edca6b3e8
+
+	measure 'Top 10 Products Revenue' = CALCULATE ( [Net Revenue], TOPN ( 10, ALLSELECTED ( DimProduct[Product] ), [Net Revenue], DESC ) )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 17d41ba7-c1d5-40ac-9314-5cdde0abc8ea
+
+	measure 'Revenue Concentration %' = DIVIDE ( [Top 10 Products Revenue], CALCULATE ( [Net Revenue], ALLSELECTED ( DimProduct[Product] ) ) )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: ad976a3a-2365-4ba6-87be-0df046fe9051
+
+	measure 'Units On Hand' = CALCULATE ( SUM ( FactInventory[UnitsOnHand] ), LASTNONBLANK ( DimDate[Date], CALCULATE ( COUNTROWS ( FactInventory ) ) ) )
+		formatString: #,0
+		lineageTag: 4ba17caf-5ca0-44be-aa60-d3d1389c71f1
+
+	measure 'Inventory Value' = CALCULATE ( SUM ( FactInventory[InventoryValue] ), LASTNONBLANK ( DimDate[Date], CALCULATE ( COUNTROWS ( FactInventory ) ) ) )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: 4be834aa-53d0-4aa0-b863-9de47d94292e
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'Avg Inventory Value' = AVERAGEX ( VALUES ( DimDate[YearMonth] ), [Inventory Value] )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: d768d6b8-f199-4d94-aaa3-7f8de1fd09b6
+
+	measure 'Inventory Turnover' = DIVIDE ( [Total Cost], [Avg Inventory Value] )
+		formatString: 0.0
+		lineageTag: 2c427e89-607a-4406-8483-ad43698692c4
+
+	measure 'Days of Inventory' =
+			
+			DIVIDE ( COUNTROWS ( DimDate ), [Inventory Turnover] )
+		formatString: 0.0
+		lineageTag: aad9f1f1-5258-4e86-8d1a-054f46aa61de
+
+	measure 'Marketing Spend' = SUM ( FactMarketingSpend[MarketingSpend] )
+		formatString: \$#,0;(\$#,0);\$#,0
+		lineageTag: a0b8f7c7-065b-47b9-884c-d63fec34dfd8
+
+	measure ROAS = DIVIDE ( [Net Revenue], [Marketing Spend] )
+		formatString: 0.0
+		lineageTag: 851e0bcd-2619-4fee-9433-909fa081728f
+
+	measure CAC = DIVIDE ( [Marketing Spend], [New Customers] )
+		formatString: \$#,0.00;(\$#,0.00);\$#,0.00
+		lineageTag: b70cdecd-26ae-436e-b781-5505182d50e2
+
+		annotation PBI_FormatHint = {"currencyCulture":"en-US"}
+
+	measure 'CTR %' = DIVIDE ( SUM ( FactMarketingSpend[Clicks] ), SUM ( FactMarketingSpend[Impressions] ) )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 10d0e904-f6e6-4256-a587-faa661aa67a1
+
+	measure 'Marketing % of Revenue' = DIVIDE ( [Marketing Spend], [Net Revenue] )
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 492fb437-77b3-4de7-b012-9958c4abf248
+
+	measure 'LTV to CAC' = DIVIDE ( [Customer LTV], [CAC] )
+		formatString: 0.0
+		lineageTag: b258ff28-22df-4f4d-b6b9-65a0e109dc1a
+
+	measure 'Attainment Goal' = 1
+		formatString: 0%;-0%;0%
+		lineageTag: 5c1c06ac-cda6-426f-a8f0-b257c6e534bf
+
+	measure 'Attainment Max' = MAX ( 1.2, [Target Attainment %] * 1.1 )
+		formatString: 0%;-0%;0%
+		lineageTag: 239ac421-751e-414c-838b-c6f7df81017c
+
+	column x
+		isHidden
+		formatString: 0
+		lineageTag: 44e0118e-24c0-4287-9c9d-3ce8fa6b35c1
+		summarizeBy: sum
+		isNameInferred
+		sourceColumn: [x]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition _Measures = calculated
+		mode: import
+		source = ROW ( "x", 1 )
+
+	annotation PBI_Id = 6d90051ff94545428ad76bf71af2d14c
+

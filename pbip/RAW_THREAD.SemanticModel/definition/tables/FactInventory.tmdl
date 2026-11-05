@@ -1,0 +1,73 @@
+table FactInventory
+	lineageTag: d9fd40c1-f2db-45c9-9081-dd1b15753fa4
+
+	column DateKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 613d56de-3e49-4539-a02e-710c4e5630eb
+		summarizeBy: none
+		sourceColumn: DateKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column ProductKey
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ece57c8-3188-474b-bccc-1199944e1b66
+		summarizeBy: none
+		sourceColumn: ProductKey
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitsOnHand
+		dataType: int64
+		formatString: 0
+		lineageTag: 15538860-9def-42ae-9548-04029d7523d0
+		summarizeBy: sum
+		sourceColumn: UnitsOnHand
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitsReceived
+		dataType: int64
+		formatString: 0
+		lineageTag: 0c0f8e2d-40b9-4990-ad26-80fa7a76ea0a
+		summarizeBy: sum
+		sourceColumn: UnitsReceived
+
+		annotation SummarizationSetBy = Automatic
+
+	column UnitsSold
+		dataType: int64
+		formatString: 0
+		lineageTag: f0ed9737-11fa-402d-9e09-6c5d5867225d
+		summarizeBy: sum
+		sourceColumn: UnitsSold
+
+		annotation SummarizationSetBy = Automatic
+
+	column InventoryValue
+		dataType: double
+		lineageTag: 016dc318-4f9d-4b90-a527-1262d4d127d1
+		summarizeBy: sum
+		sourceColumn: InventoryValue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition FactInventory = m
+		mode: import
+		source =
+				let
+				  Источник = Csv.Document(File.Contents("C:\Users\admin\Downloads\New\FactInventory.csv"), [Delimiter = ",", Columns = 6, QuoteStyle = QuoteStyle.None]),
+				  #"Повышенные заголовки" = Table.PromoteHeaders(Источник, [PromoteAllScalars = true]),
+				  #"Измененный тип столбца" = Table.TransformColumnTypes(#"Повышенные заголовки", {{"DateKey", Int64.Type}, {"ProductKey", Int64.Type}, {"UnitsOnHand", Int64.Type}, {"UnitsReceived", Int64.Type}, {"UnitsSold", Int64.Type}, {"InventoryValue", type text}}, "ru"),
+				    #"Измененный тип с языком" = Table.TransformColumnTypes(#"Измененный тип столбца", {{"InventoryValue", type number}}, "en-GB")
+				in
+				  #"Измененный тип с языком"
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Навигация
+
